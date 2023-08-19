@@ -1,0 +1,7 @@
+which_model_netG: "resnet_9blocks"
+input_nc: 3
+output_nc: 1
+norm: "batch"
+use_dropout: False
+n_blocks: 9
+ngf: 64

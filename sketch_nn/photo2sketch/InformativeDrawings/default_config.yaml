@@ -1,0 +1,3 @@
+input_nc: 3
+output_nc: 1
+n_blocks: 3

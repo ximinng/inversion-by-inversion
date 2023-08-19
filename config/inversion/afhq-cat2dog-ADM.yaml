@@ -1,0 +1,99 @@
+seed: 1234
+# data
+dataset: "cat2dog"
+num_classes: 2
+image_size: 256
+channels: 3
+# optimizer
+lr: 3e-4
+adam_betas: [ 0.9, 0.999 ]
+weight_decay: 0.05
+lr_scheduler: "linear" # "linear", "cosine" ,"cosine_with_restarts", "constant_with_warmup"
+lr_warmup_steps: 100
+# train:
+train_num_steps: 700000
+train_batch_size: 32
+noised: True
+schedule_sampler: "uniform"
+# sample
+valid_batch_size: 8
+# methods
+perturb_step: [ 400, 400, 400 ]
+repeat_step: [ 3, 2, 1 ] # K
+n_stage: 3
+src_down_N: 64
+sdepath: './checkpoint/InvSDE/afhq_dog_4m.pt'
+# shape control
+use_shape: [ True, True, True ]
+shape_metric: "l2" # "l1", "lpips", "l2" , "cosine"
+lam_shape: [ 0.5,0.6,0.5 ]
+ys_rescale: True
+shape_expert_root: './checkpoint/InvSDE/info-drawing/'
+shape_style: 'anime_style'
+# texture control
+pixel_texture: [ False, True, False ]
+lam_pixel_texture: [ 0, 2, 0 ]
+blur_y: True
+blur_xt: True
+feature_texture: [ False, True, False ]
+feature_texture_model: "CLIP" # "VGG", "CLIP", "inceptionV3"
+feature_texture_metric: "l2" # "l1", "cosine"
+lam_feature_texture: [ 0, 0.5, 0 ]
+# style control
+use_style: [ False, False, False ]
+preserve_color: False
+style_decoder: './checkpoint/style/decoder.pth'
+style_vgg: './checkpoint/style/vgg_normalised.pth'
+# domain-specific features
+use_dse: [ False, False, False ]
+dse_metric: "neg_l2" # "cosine"
+lam_dse: [ 0,0,0 ]
+dsepath: '' # './checkpoint/InvSDE/cat2dog_dse.pt'
+
+dpm_solver:
+  t_guided:
+    1: [ 300, 200, 100, 0 ]
+    2: [ 300, 200, 100, 0 ]
+    3: [ 300, 200, 100, 0 ]
+  t_dpm_solver_dense:
+    1: [ 399, 350 ] # range
+    2: [ 399, 300 ] # range
+    3: [ 399, 350 ] # range
+  t_dpm_solver_spare:
+    1: [ 299, 298, 297, 296, 199, 198, 197, 196, 99, 98, 97, 96 ]
+    2: [ 299, 298, 297, 296, 199, 198, 197, 196, 99, 98, 97, 96 ]
+    3: [ 299, 298, 297, 296, 199, 198, 197, 196, 99, 98, 97, 96 ]
+
+model:
+  type: "ADM"
+  use_fp16: False
+  in_channels: 3
+  num_channels: 128
+  out_channels: 3
+  num_res_blocks: 1
+  class_cond: False
+  use_checkpoint: False
+  attention_resolutions: "16"
+  num_heads: 4
+  num_head_channels: 64
+  num_heads_upsample: -1
+  use_scale_shift_norm: True
+  dropout: 0
+  resblock_updown: True
+  use_new_attention_order: False
+
+diffusion:
+  beta_schedule: "linear"
+  beta_start: 0.0001
+  beta_end: 0.02
+  timesteps: 1000
+  var_type: fixedsmall # here
+  clip_denoised: True
+  learn_sigma: True # out_channels * 2
+  sigma_small: False
+  use_kl: False
+  predict_xstart: False
+  rescale_timesteps: False
+  rescale_learned_sigmas: False
+  use_ddim: False
+  timestep_respacing: ""

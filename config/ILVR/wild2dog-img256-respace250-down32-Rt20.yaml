@@ -1,0 +1,56 @@
+seed: 1234
+# data
+dataset: "cat2dog"
+num_classes: 2
+image_size: 256
+channels: 3
+# optimizer
+lr: 3e-4
+adam_betas: [ 0.9, 0.999 ]
+weight_decay: 0.05
+lr_scheduler: "cosine" # "linear", "cosine" ,"cosine_with_restarts", "constant_with_warmup"
+lr_warmup_steps: 100
+# train:
+train_num_steps: 700000
+train_batch_size: 32
+noised: True
+schedule_sampler: "uniform"
+# sample
+valid_batch_size: 8
+# methods
+down_N: 32
+range_t: 20
+
+model:
+  type: "ADM"
+  use_fp16: False
+  in_channels: 3
+  num_channels: 128
+  out_channels: 3
+  num_res_blocks: 1
+  class_cond: False
+  use_checkpoint: False
+  attention_resolutions: "16"
+  num_heads: 4
+  num_head_channels: 64
+  num_heads_upsample: -1
+  use_scale_shift_norm: True
+  dropout: 0
+  resblock_updown: True
+  use_new_attention_order: False
+
+diffusion:
+  beta_schedule: "linear"
+  beta_start: 0.0001
+  beta_end: 0.02
+  timesteps: 1000
+  var_type: fixedsmall # here
+  clip_denoised: True
+  learn_sigma: True # out_channels * 2
+  sigma_small: False
+  use_kl: False
+  predict_xstart: False
+  rescale_timesteps: False
+  rescale_learned_sigmas: False
+  use_ddim: False
+  timestep_respacing: "250"
